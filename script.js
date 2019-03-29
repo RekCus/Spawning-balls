@@ -1,31 +1,43 @@
+
 const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
+const context = canvas.getContext('2d');
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-let ball;
-let balls=[];
 
-//hier volgt het script
-function animate(){
-        ctx.fillStyle="black";
-        ctx.fillRect(0,0,canvas.width,canvas.height);
-        for(let i=0;i<balls.length;i++){
-            balls[i].draw();
-            balls[i].update();
-        }
-        requestAnimationFrame(animate);
-    }
+let myGameObjects = [];
+let myImages = ['ball.png'];
 
-function rng(max){
-    return Math.floor(Math.random()*max+1);
-}
-var myVar = setInterval(myTimer, 1000);
+yspeed = 10;
 
-function myTimer() {
-
-}
-for(let j=0;j<10;j++){
-    balls[j] = new Ball(rng(canvas.width),rng(canvas.height),20,"yellow");
-}
 animate();
+
+
+function animate(){
+  context.clearRect(0,0,canvas.width,canvas.height);
+  requestAnimationFrame(animate);
+  
+  if(Math.random()<0.1){
+    let gameObject = {};
+    gameObject.myImage = new Image();
+    gameObject.myImage.src = myImages[0];
+    gameObject.x = getRandomNumber(canvas.width);
+    gameObject.y = -100;
+    gameObject.scale = 0.7;
+    myGameObjects.push(gameObject);
+  }
+
+  for(let i = 0; i<myGameObjects.length;i++){
+    myGameObjects[i].y += yspeed*myGameObjects[i].scale;
+    context.drawImage(myGameObjects[i].myImage,myGameObjects[i].x,myGameObjects[i].y,100*myGameObjects[i].scale, 100*myGameObjects[i].scale);
+    if(myGameObjects[i].y>canvas.heigth){
+      myGameObjects.splice(i,1);
+    }
+  }
+}
+
+function getRandomNumber(max){
+  return Math.floor(Math.random()*max);
+}
+
+
